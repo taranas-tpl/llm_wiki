@@ -456,6 +456,35 @@ export const LLM_PRESETS: LlmPreset[] = [
     suggestedContextSize: 128000,
   },
   {
+    id: "amazon-bedrock",
+    label: "Amazon Bedrock",
+    hint: "bedrock-mantle.<region>.api.aws — edit region in URL; uses a Bedrock API key",
+    provider: "custom",
+    // Bedrock's OpenAI-compatible ("Mantle") endpoint. Auth is a Bedrock
+    // API key sent as `Authorization: Bearer …` (the custom branch in
+    // llm-providers.ts adds it) — NO AWS SigV4 signing, so it fits the
+    // plain custom path. The region is baked into the host: change
+    // `us-east-1` to wherever your Bedrock API key lives, or it 401s.
+    baseUrl: "https://bedrock-mantle.us-east-1.api.aws/v1",
+    apiMode: "chat_completions",
+    // IMPORTANT: model ids here are the SHORT Mantle ids — NO `us.`/`eu.`
+    // inference-profile prefix and NO `-v1` suffix. Those prefixed/ARN
+    // forms are for the Converse API and 404 on Mantle. The authoritative
+    // list is `GET /v1/models` on the same endpoint; availability is
+    // per-account (e.g. opus-4-8 may be listed but entitlement-gated).
+    defaultModel: "anthropic.claude-opus-4-7",
+    suggestedModels: [
+      "anthropic.claude-opus-4-7",
+      "anthropic.claude-opus-4-8",
+      "anthropic.claude-haiku-4-5",
+      "deepseek.v3.2",
+      "qwen.qwen3-235b-a22b-2507",
+      "openai.gpt-oss-120b",
+      "minimax.minimax-m2.5",
+    ],
+    suggestedContextSize: 200000,
+  },
+  {
     id: "ollama-local",
     label: "Ollama (Local)",
     hint: "Self-hosted llama.cpp / Ollama",
